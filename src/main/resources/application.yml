@@ -4,10 +4,6 @@ spring:
     mongodb:
       uri: ${MONGO_URI}
 
-jwt:
-  secret: ${JWT_SECRET}
-
-# --- Mail Configuration ---
   mail:
     host: ${SPRING_MAIL_HOST}
     port: ${SPRING_MAIL_PORT}
@@ -19,6 +15,10 @@ jwt:
           auth: true
           starttls:
             enabled: true
+            required: true
+
+jwt:
+  secret: ${JWT_SECRET}
 
 # --- Actuator & Logging ---
 management:
