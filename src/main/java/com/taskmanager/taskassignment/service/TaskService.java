@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.taskmanager.taskassignment.service.ConfigService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +32,8 @@ public class TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ConfigService configService;
 
     private boolean isAdmin() {
         logger.debug("Checking if administrator");
@@ -39,8 +42,7 @@ public class TaskService {
     }
 
     @Async
-    public void sendEmail(String to, String body)
-    {
+    public void sendEmail(String to, String body) {
         logger.debug("Sending email");
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -51,15 +53,27 @@ public class TaskService {
     }
 
     public String createTasks(Task task) {
-        logger.info("creating a task with title:{}", task.getTitle());
-        if(task.getTitle() == null || task.getTitle().trim().isEmpty())
-        {
+        logger.info("creating a task with title: {}", task.getTitle());
+
+        if (task.getTitle() == null || task.getTitle().trim().isEmpty()) {
             throw new RuntimeException("Validation Error: Title cannot be empty");
         }
+
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User not found!");
+        }
+
+        String threshold = configService.getConfig("Task_CREATION_LIMIT");
+        if (threshold != null) {
+            try {
+                if (user.getTaskEntries().size() >= Integer.parseInt(threshold)) {
+                    throw new RuntimeException("Limit reached for tasks!");
+                }
+            } catch (NumberFormatException e) {
+                logger.error("Invalid configuration value for Task_CREATION_LIMIT: {}", threshold);
+            }
         }
 
         task.setUsername(username);
@@ -67,10 +81,11 @@ public class TaskService {
         Task savedTask = taskRepository.save(task);
 
         sendEmail(user.getEmail(),
-                "Your task '"+ task.getTitle() +"' was created successfully!");
+                "Your task '" + task.getTitle() + "' was created successfully!");
 
         user.getTaskEntries().add(savedTask);
         userService.saveUser(user);
+
         return savedTask.getId();
     }
 

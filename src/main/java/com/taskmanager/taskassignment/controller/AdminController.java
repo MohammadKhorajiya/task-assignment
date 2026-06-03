@@ -24,6 +24,13 @@ public class AdminController {
         return new ResponseEntity<>("User " + username + " is now an ADMIN", HttpStatus.OK);
     }
 
+    @PostMapping("/refresh-cache")
+    public ResponseEntity<String> refreshCache()
+    {
+        adminService.refreshAppCache();
+        return new ResponseEntity<>("Cache refreshed", HttpStatus.OK);
+    }
+
     @GetMapping("/all-users")
     public ResponseEntity<List<User>> getAllUsers()
     {

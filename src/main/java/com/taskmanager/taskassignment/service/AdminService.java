@@ -21,6 +21,8 @@ public class AdminService {
     private UserRepository userRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private ConfigService configService;
 
     public void promoteToAdmin(String username) {
         logger.debug("promoteToAdmin");
@@ -45,5 +47,10 @@ public class AdminService {
         User user=userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
             taskRepository.deleteAll(user.getTaskEntries());
             userRepository.deleteByUsername(username);
+    }
+
+    public void refreshAppCache()
+    {
+        configService.refreshCache();
     }
 }
