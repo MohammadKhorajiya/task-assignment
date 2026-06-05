@@ -1,51 +1,37 @@
-  Task Assignment System
+# Task Assignment System (REST API)
 
-A robust, production-ready Task Management API built with Spring Boot and MongoDB, featuring secure authentication, role-based access control (RBAC), and dynamic configuration caching.
+A production-ready Backend application built with **Spring Boot**, designed to help users manage their tasks efficiently while providing administrators powerful management tools.
 
-🚀 Features
-Secure Authentication: JWT-based login and signup with secure password hashing (BCrypt).
+## 🚀 Core Functionalities
 
-Role-Based Access Control (RBAC): Separate access levels for USER and ADMIN.
+### 🔐 Security & Authentication
+* **JWT (JSON Web Token):** Secure authentication system. No one can access the data without a valid token.
+* **RBAC (Role-Based Access Control):** * **USER:** Can manage their own tasks.
+    * **ADMIN:** Can view all users, manage the system, and promote users to Admin status.
 
-Dynamic Configuration: Efficient caching system using ConcurrentHashMap to manage application settings (like task limits) on the fly without restarting.
+### 📝 Task Features
+* **Full CRUD Operations:** Users can Create, Read, Update, and Delete their tasks.
+* **Advanced Search & Filtering:** Filter tasks by status and priority with pagination support.
+* **Email Notifications:** Asynchronous email system to notify users when a task is created.
 
-Advanced Task Management: CRUD operations with status filtering, priority categorization, and pagination.
+### ⚙️ Performance & Database
+* **Database (MongoDB Atlas):** Using a cloud-based NoSQL database for flexible data storage.
+* **Dynamic Caching:** Integrated in-memory caching system to manage application settings (like task limits) dynamically without restarting the server.
 
-Async Notifications: Automated email notifications for task creation using JavaMailSender and @Async.
+### 🛠 Admin Powers
+* **User Management:** Admins can monitor all registered users in the system.
+* **Promote to Admin:** Specialized endpoint to upgrade existing users to Admin status without losing data.
+* **Dynamic Config Refresh:** Admin-only endpoint to refresh app settings from the database instantly.
 
-Production-Ready: Global exception handling, robust logging, and Actuator health monitoring.
+---
 
-🛠 Tech Stack
-Backend: Java 21, Spring Boot 3.2.6
+## 🛠 Tech Stack
+* **Language:** Java 21
+* **Framework:** Spring Boot 3.2.6
+* **Security:** Spring Security & JWT
+* **Database:** MongoDB (Cloud Atlas)
+* **Cloud Deployment:** Render
+* **Testing/API Management:** EchoAPI
 
-Security: Spring Security, JSON Web Tokens (JWT)
-
-Database: MongoDB (via Spring Data MongoDB)
-
-Deployment: Render
-
-Testing/API Management: EchoAPI
-
-⚙️ Environment Variables
-To run this application, you must configure the following environment variables:
-
-MONGO_URI: Your MongoDB connection string.
-
-JWT_SECRET: A secure key for signing JWT tokens.
-
-SPRING_MAIL_HOST, SPRING_MAIL_PORT, SPRING_MAIL_USERNAME, SPRING_MAIL_PASSWORD: SMTP credentials for email services.
-
-🚀 Deployment
-This project is deployed on Render.
-
-Base URL: https://task-assignment-mgvz.onrender.com
-
-Health Check: GET /public/health
-
-👨‍💻 Admin Control
-Admins can manage the application settings dynamically via:
-
-POST /admin/refresh-cache: Refreshes the in-memory configuration cache from the MongoDB database.
-
-Developed by,
-MohammadKhoarajiya
+---
+*Developed by Mohammad Khorajiya*
